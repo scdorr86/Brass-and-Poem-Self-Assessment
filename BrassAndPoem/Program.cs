@@ -1,5 +1,7 @@
 ﻿//create a "products" variable here to include at least five Product instances. Give them appropriate ProductTypeIds.
 
+using System.Linq;
+
 List<Product> products = new List<Product>()
 {
     new Product()
@@ -103,17 +105,36 @@ void DisplayMenu()
 
 void DisplayAllProducts(List<Product> products, List<ProductType> productTypes)
 {
-    throw new NotImplementedException();
+    Console.WriteLine("Current Products: ");
+
+    for (int i = 0; i < products.Count; i++)
+    {
+        var findProdType = from prodType in productTypes
+                    where products[i].ProductTypeId == prodType.Id
+                    select new { prodType.Title };
+        var productType = findProdType.FirstOrDefault();
+        Console.WriteLine($"{i} . {products[i].Name} - Price: {products[i].Price}, Type: {productType.Title}");
+
+    }
 }
 
 void DeleteProduct(List<Product> products, List<ProductType> productTypes)
 {
-    throw new NotImplementedException();
+    Console.WriteLine("Please select a Product to remove: ");
+    foreach (Product product in products)
+    {
+        var index = products.IndexOf(product);
+        Console.WriteLine($"{index}. {product.Name}");
+    }
+
+    int deleteInput = Convert.ToInt32(Console.ReadLine());
+    products.RemoveAt( deleteInput );
 }
 
 void AddProduct(List<Product> products, List<ProductType> productTypes)
 {
-    throw new NotImplementedException();
+    Console.WriteLine("Please enter Product Information: ");
+
 }
 
 void UpdateProduct(List<Product> products, List<ProductType> productTypes)
