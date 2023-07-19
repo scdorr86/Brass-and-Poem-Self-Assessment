@@ -109,11 +109,8 @@ void DisplayAllProducts(List<Product> products, List<ProductType> productTypes)
 
     for (int i = 0; i < products.Count; i++)
     {
-        var findProdType = from prodType in productTypes
-                    where products[i].ProductTypeId == prodType.Id
-                    select new { prodType.Title };
-        var productType = findProdType.FirstOrDefault();
-        Console.WriteLine($"{i} . {products[i].Name} - Price: {products[i].Price}, Type: {productType.Title}");
+        var findProdType = productTypes.First(x => x.Id == products[i].ProductTypeId);
+        Console.WriteLine($"{i} . {products[i].Name} - Price: ${products[i].Price}, Type: {findProdType.Title}");
 
     }
 }
@@ -133,13 +130,64 @@ void DeleteProduct(List<Product> products, List<ProductType> productTypes)
 
 void AddProduct(List<Product> products, List<ProductType> productTypes)
 {
-    Console.WriteLine("Please enter Product Information: ");
+    Product product = new Product();
+
+    Console.WriteLine("Please enter Product Name: ");
+    string prodNameInput = Console.ReadLine();
+    product.Name = prodNameInput;
+
+    Console.WriteLine("Please enter Product Price: ");
+    decimal priceInput = Convert.ToDecimal(Console.ReadLine());
+    product.Price = priceInput;
+
+    Console.WriteLine("Please choose a Product Type: ");
+    foreach (ProductType productType in productTypes)
+    {
+        Console.WriteLine($"{productTypes.IndexOf(productType)+1}. {productType.Title}");
+    }
+
+    int typeChoice = Convert.ToInt32(Console.ReadLine());
+    var findProdType = productTypes.First(x => x.Id == typeChoice);
+    product.ProductTypeId = findProdType.Id;
+
+    products.Add(product);
 
 }
 
 void UpdateProduct(List<Product> products, List<ProductType> productTypes)
 {
-    throw new NotImplementedException();
+    Console.WriteLine("Please choose a product to update: ");
+    for (int i = 0; i < products.Count; i++)
+    {
+        var findProdType = productTypes.First(x => x.Id == products[i].ProductTypeId);
+        Console.WriteLine($"{i} . {products[i].Name} - Price: ${products[i].Price}, Type: {findProdType.Title}");
+
+    }
+    int updateChoice = Convert.ToInt32(Console.ReadLine());
+
+    var productToUpdate = products.ElementAt(updateChoice);
+
+    Console.WriteLine($"You chose to update: {productToUpdate.Name}");
+    
+    Console.WriteLine("Please enter updated product name: ");
+    var updatedName = Console.ReadLine();
+    productToUpdate.Name = updatedName;
+
+    Console.WriteLine("Please enter updated product price: ");
+    decimal updatedPrice = Convert.ToDecimal(Console.ReadLine());
+    productToUpdate.Price = updatedPrice;
+
+    Console.WriteLine("Please enter updated product type: ");
+    foreach (ProductType productType in productTypes)
+    {
+        Console.WriteLine($"{productTypes.IndexOf(productType)+1}. {productType.Title}");
+    }
+
+    int NewTypeChoice = Convert.ToInt32(Console.ReadLine());
+    var ProdType = productTypes.First(x => x.Id == NewTypeChoice);
+    productToUpdate.ProductTypeId = ProdType.Id;
+
+
 }
 
 // don't move or change this!
